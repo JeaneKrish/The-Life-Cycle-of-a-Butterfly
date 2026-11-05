@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activities · My Butterfly Discovery Journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #bfe3f7;
+    --sky-deep: #9fd3f0;
+    --leaf: #7cbf4a;
+    --leaf-dark: #3f8a2c;
+    --hill: #5aa63a;
+    --hill-deep: #3d8a2e;
+    --cream: #fff8e7;
+    --cream-edge: #fdecc4;
+    --wood: #d9a56a;
+    --wood-dark: #a8703a;
+    --ink: #5a3a1e;
+    --orange: #ee7a1c;
+    --sun: #ffd84d;
+    --sun-deep: #f4b92b;
+    --lilac: #c9b6ee;
+    --lilac-deep: #8a6cd0;
+    --peach: #fde6c4;
+    --mint: #d8efc2;
+    --lavender: #e5dbf8;
+    --blush: #fbd7d0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive, sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse 260px 90px at 12% 6%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 320px 100px at 88% 3%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 280px 90px at 6% 52%, rgba(255,255,255,.9) 60%, transparent 62%),
+      radial-gradient(ellipse 300px 90px at 95% 58%, rgba(255,255,255,.9) 60%, transparent 62%),
+      linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 35%, #e4f4fb 62%, #f6f9e4 80%, #e7f3c8 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 4px solid var(--lilac-deep); outline-offset: 2px;
+  }
+  h1, h2, h3, .display { font-family: "Baloo 2", "Fredoka", sans-serif; }
+
+  .pic {
+    position: relative; display: block; width: 100%; height: 100%;
+    background: rgba(255,255,255,.45);
+    border: 2px dashed rgba(90,58,30,.35);
+    border-radius: inherit;
+  }
+  .pic::before {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6px; font-size: 14px; line-height: 1.1;
+    color: rgba(90,58,30,.65); z-index: 0;
+  }
+  .pic img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; z-index: 1;
+  }
+  .pic.cover img { object-fit: cover; }
+  .pic:has(img) { background: transparent; border-color: transparent; }
+  .pic:has(img)::before { content: none; }
+
+  .page { position: relative; max-width: 1180px; margin: 0 auto; padding: 20px 24px 0; }
+
+  .topbar { display: flex; align-items: center; gap: 18px; position: relative; z-index: 5; }
+  .topbar .logo-fly { width: 64px; height: 56px; flex: none; border-radius: 12px; }
+  .nav {
+    flex: 1; display: flex; justify-content: center; gap: 6px;
+    padding: 10px 14px; max-width: 640px; margin: 0 auto 0 0;
+    background: #fff1c9; border-radius: 999px;
+    box-shadow: 0 4px 0 rgba(224,188,100,.35), 0 8px 18px rgba(80,120,40,.12);
+  }
+  .nav a {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 19px;
+    padding: 4px 22px; border-radius: 999px; transition: background .15s, transform .15s;
+  }
+  .nav a:hover { background: rgba(255,216,77,.5); }
+  .nav a.active { background: var(--sun); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08); }
+  .search-btn {
+    flex: none; width: 52px; height: 52px; border: 0; border-radius: 50%;
+    background: #fff1c9; color: var(--ink); display: grid; place-items: center;
+    cursor: pointer; box-shadow: 0 4px 0 rgba(224,188,100,.35); transition: transform .15s;
+  }
+  .search-btn:hover { transform: scale(1.06); }
+  .search-btn svg { width: 26px; height: 26px; }
+
+  .section-panel {
+    position: relative; z-index: 4; margin-top: 22px;
+    padding: 0 32px 40px;
+    background: linear-gradient(180deg, #fffaf0, #fff6e0);
+    border-radius: 56px;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px #fdeab9, 0 18px 30px rgba(80,120,40,.15);
+  }
+  .pill-title {
+    display: inline-block; position: relative; top: -26px; margin-bottom: -10px;
+    padding: 6px 54px 8px; font-family: "Baloo 2", sans-serif; font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px); border-radius: 999px; line-height: 1.15;
+  }
+  .pill-title.green {
+    color: #3f7d1f; background: #b6e08a; border: 4px solid #9ad06a;
+    box-shadow: 0 5px 0 rgba(90,150,50,.35); -webkit-text-stroke: .5px #2f6414;
+  }
+  .sub { font-size: 24px; margin-top: 0; position: relative; }
+  .sub .tiny-heart { width: 14px; height: 14px; fill: #f4b92b; margin-left: 4px; }
+
+  .mission {
+    margin-top: 24px; padding: 22px 26px; border-radius: 30px;
+    background: #fff; border: 3px solid #fdecc4;
+    box-shadow: 0 4px 0 rgba(224,188,100,.25);
+  }
+  .mission h2 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 26px; margin-bottom: 6px; }
+  .mission p { font-size: 20px; line-height: 1.35; margin-bottom: 10px; }
+
+  .mission table {
+    width: 100%; border-collapse: collapse; margin-top: 12px;
+    font-size: 18px;
+  }
+  .mission th, .mission td {
+    border: 2px dashed #d9c9a8; padding: 0; text-align: left;
+  }
+  .mission th {
+    background: #fff4d9; font-family: "Baloo 2", sans-serif; font-weight: 700;
+    padding: 10px 14px;
+  }
+  .mission td { background: #fffdf7; }
+  .mission td input {
+    width: 100%; height: 48px; padding: 10px 14px;
+    font-family: inherit; font-size: 18px; color: var(--ink);
+    border: 0; background: transparent; outline: none;
+  }
+  .mission td input:focus { background: #fff9ec; box-shadow: inset 0 0 0 2px #f4b92b; border-radius: 4px; }
+
+  .reflection-list { margin-left: 0; margin-top: 8px; list-style: none; }
+  .reflection-list li { margin-bottom: 16px; font-size: 20px; }
+  .reflection-list .q-label { display: block; margin-bottom: 6px; font-weight: 600; }
+  .reflection-list textarea {
+    width: 100%; min-height: 90px; resize: vertical;
+    padding: 10px 14px; border-radius: 16px;
+    border: 2px dashed #d9c9a8; background: #fffdf7;
+    font-family: inherit; font-size: 18px; color: var(--ink);
+    line-height: 1.35;
+  }
+  .reflection-list textarea:focus {
+    outline: none; background: #fff9ec; border-color: #f4b92b;
+    box-shadow: 0 0 0 3px rgba(244,185,43,.3);
+  }
+
+  .save-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 18px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .save-btn {
+    font-family: "Baloo 2", sans-serif; font-weight: 700; font-size: 24px;
+    padding: 10px 40px; color: #5a3a1e;
+    background: linear-gradient(180deg, #ffe46b, #fdcf3a);
+    border: 4px solid #fff3b0; border-radius: 999px;
+    box-shadow: 0 7px 0 #e4a91f, 0 14px 22px rgba(120,80,0,.25);
+    cursor: pointer; transition: transform .15s, box-shadow .15s;
+  }
+  .save-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #e4a91f, 0 18px 26px rgba(120,80,0,.28); }
+  .save-btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #e4a91f; }
+  .save-status {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 19px;
+    color: #2f6414; min-height: 26px;
+  }
+
+  .completion {
+    margin-top: 28px; padding: 22px 26px; border-radius: 30px;
+    background: #b6e08a; box-shadow: inset 0 0 0 3px #9ad06a;
+    text-align: center; font-family: "Baloo 2", sans-serif;
+    font-weight: 800; font-size: 24px; color: #2f6414;
+    display: none;
+  }
+  .completion.show { display: block; }
+
+  .mini-links { display: flex; justify-content: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
+  .mini {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 20px;
+    padding: 4px 26px 6px; border-radius: 999px; background: #fff;
+    border: 3px solid #e4d7fa; box-shadow: 0 4px 0 rgba(138,108,208,.25);
+    transition: transform .15s, background .15s;
+  }
+  .mini:hover { transform: translateY(-2px); background: #f3ecff; }
+
+  .meadow { position: relative; margin-top: 10px; height: 200px; z-index: 1; }
+  .hill {
+    position: absolute; left: -5%; right: -5%; bottom: 0; height: 160px;
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--hill-deep) 0 99%, transparent 100%);
+  }
+  .hill.back {
+    height: 130px; bottom: 34px;
+    background: radial-gradient(ellipse 55% 100% at 30% 100%, #9bd465 0 99%, transparent 100%);
+  }
+  .meadow .motto {
+    position: absolute; left: 0; right: 0; bottom: 46px; text-align: center;
+    font-size: clamp(22px, 3.2vw, 32px); color: #fff;
+    text-shadow: 0 2px 0 rgba(30,80,20,.35); z-index: 3;
+  }
+  .motto .heart { width: 26px; height: 26px; fill: #ffd84d; vertical-align: middle; margin-left: 10px; }
+  .flowers-left, .flowers-right {
+    position: absolute; bottom: 6px; width: 180px; height: 130px; z-index: 2; border-radius: 16px;
+  }
+  .flowers-left { left: 10px; }
+  .flowers-right { right: 10px; }
+
+  @media (max-width: 900px) {
+    .nav a { padding: 4px 14px; font-size: 17px; }
+    .section-panel { padding: 0 20px 30px; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .page { padding: 14px 14px 0; }
+    .topbar { flex-wrap: wrap; justify-content: center; }
+    .topbar .logo-fly { display: none; }
+    .nav { flex-wrap: wrap; max-width: none; margin: 0; }
+    .section-panel { border-radius: 38px; padding: 0 16px 26px; }
+    .pill-title { padding: 4px 28px 6px; }
+    .mission { padding: 16px; }
+    .mission table { font-size: 16px; }
+    .mission th { padding: 8px 10px; }
+    .mission td input { height: 44px; padding: 8px 10px; font-size: 16px; }
+    .flowers-left, .flowers-right { width: 100px; height: 70px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="topbar">
+    <a href="index.html" class="logo-fly" aria-label="Home">
+      <span class="pic" data-name="butterfly-left"><img src="images/butterfly-left.png" alt="" onerror="this.remove()"></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="lessons.html">Lessons</a>
+      <a href="games.html">Games</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="about.html">About Us</a>
+    </nav>
+    <button class="search-btn" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="M15.5 15.5L21 21"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="section-panel" aria-labelledby="activities-title">
+    <h1 class="pill-title green" id="activities-title" style="position:relative;top:-26px;">My Butterfly Discovery Journal</h1>
+    <p class="sub" style="text-align:center;margin-top:-6px;">It is time to become a nature explorer! Observe and write about the butterfly life cycle.
+      <svg class="tiny-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+    </p>
+
+    <div class="mission">
+      <h2>Activity Objectives</h2>
+      <p>Identify and arrange the four stages of a butterfly. Describe each stage. Practice observing nature carefully and respectfully.</p>
+    </div>
+
+    <!-- ===== Mission 2: Nature Observation (interactive) ===== -->
+    <div class="mission">
+      <h2>Mission 2: Nature Observation</h2>
+      <p>If you see a butterfly or caterpillar in a safe place, observe it from a distance. Do not touch it, remove it, or damage the plant. Record what you observe below.</p>
+      <table>
+        <thead>
+          <tr><th>What I observed</th><th>What it looked like</th><th>Where I saw it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" data-field="obs1a" aria-label="What I observed, row 1"></td>
+            <td><input type="text" data-field="obs1b" aria-label="What it looked like, row 1"></td>
+            <td><input type="text" data-field="obs1c" aria-label="Where I saw it, row 1"></td>
+          </tr>
+          <tr>
+            <td><input type="text" data-field="obs2a" aria-label="What I observed, row 2"></td>
+            <td><input type="text" data-field="obs2b" aria-label="What it looked like, row 2"></td>
+            <td><input type="text" data-field="obs2c" aria-label="Where I saw it, row 2"></td>
+          </tr>
+          <tr>
+            <td><input type="text" data-field="obs3a" aria-label="What I observed, row 3"></td>
+            <td><input type="text" data-field="obs3b" aria-label="What it looked like, row 3"></td>
+            <td><input type="text" data-field="obs3c" aria-label="Where I saw it, row 3"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===== Mission 3: My Reflection (interactive) ===== -->
+    <div class="mission">
+      <h2>Mission 3: My Reflection</h2>
+      <p>Answer these questions in complete sentences. Your answers are saved in this browser as you type.</p>
+      <ul class="reflection-list">
+        <li>
+          <label class="q-label" for="ref1">1. What are the four stages of a butterfly's life cycle?</label>
+          <textarea id="ref1" data-field="ref1" placeholder="Type your answer here..."></textarea>
+        </li>
+        <li>
+          <label class="q-label" for="ref2">2. Which stage do you find the most interesting? Why?</label>
+          <textarea id="ref2" data-field="ref2" placeholder="Type your answer here..."></textarea>
+        </li>
+        <li>
+          <label class="q-label" for="ref3">3. What can you do to help protect butterflies?</label>
+          <textarea id="ref3" data-field="ref3" placeholder="Type your answer here..."></textarea>
+        </li>
+        <li>
+          <label class="q-label" for="ref4">4. What new thing did you learn from this activity?</label>
+          <textarea id="ref4" data-field="ref4" placeholder="Type your answer here..."></textarea>
+        </li>
+      </ul>
+    </div>
+
+    <div class="save-row">
+      <button class="save-btn" id="save-btn" type="button">Save My Journal</button>
+      <span class="save-status" id="save-status" aria-live="polite"></span>
+    </div>
+
+    <div class="completion" id="completion">
+      Great work, Nature Explorer! You completed your Butterfly Discovery Journal.
+    </div>
+
+    <div class="mini-links">
+      <a class="mini" href="lessons.html">Review Lessons</a>
+      <a class="mini" href="games.html">Play the Game</a>
+      <a class="mini" href="quiz.html">Take the Quiz</a>
+    </div>
+  </section>
+</div>
+
+<footer class="meadow">
+  <div class="hill back" aria-hidden="true"></div>
+  <div class="hill" aria-hidden="true"></div>
+  <div class="flowers-left">
+    <span class="pic" data-name="flowers-left"><img src="images/flowers-left.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <div class="flowers-right">
+    <span class="pic" data-name="flowers-right"><img src="images/flowers-right.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <p class="motto">
+    Small changes make a big difference!
+    <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+  </p>
+</footer>
+
+<script>
+  (function () {
+    const STORAGE_KEY = 'butterfly-journal-v1';
+    const fields = document.querySelectorAll('[data-field]');
+    const saveBtn = document.getElementById('save-btn');
+    const saveStatus = document.getElementById('save-status');
+    const completion = document.getElementById('completion');
+
+    function collect() {
+      const data = {};
+      fields.forEach(el => { data[el.dataset.field] = el.value; });
+      return data;
+    }
+
+    function hasContent(data) {
+      return Object.values(data).some(v => v && v.trim().length > 0);
+    }
+
+    function restore() {
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { saved = null; }
+      if (!saved) return;
+      fields.forEach(el => {
+        if (typeof saved[el.dataset.field] === 'string') {
+          el.value = saved[el.dataset.field];
+        }
+      });
+      if (hasContent(saved)) {
+        completion.classList.add('show');
+      }
+    }
+
+    function save(silent) {
+      const data = collect();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        if (!silent) {
+          saveStatus.textContent = 'Saved! Your journal is kept.';
+          setTimeout(() => { saveStatus.textContent = ''; }, 2500);
+        }
+        if (hasContent(data)) completion.classList.add('show');
+      } catch (e) {
+        if (!silent) {
+          saveStatus.style.color = '#a83a1a';
+          saveStatus.textContent = 'Could not save. Please try again.';
+        }
+      }
+    }
+
+    // Auto-save on input (debounced)
+    let timer = null;
+    fields.forEach(el => {
+      el.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => save(true), 600);
+      });
+    });
+
+    saveBtn.addEventListener('click', () => save(false));
+
+    restore();
+  })();
+</script>
+
+</body>
+</html>

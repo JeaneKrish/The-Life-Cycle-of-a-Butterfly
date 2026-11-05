@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lessons · The Life Cycle of a Butterfly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #bfe3f7;
+    --sky-deep: #9fd3f0;
+    --leaf: #7cbf4a;
+    --leaf-dark: #3f8a2c;
+    --hill: #5aa63a;
+    --hill-deep: #3d8a2e;
+    --cream: #fff8e7;
+    --cream-edge: #fdecc4;
+    --wood: #d9a56a;
+    --wood-dark: #a8703a;
+    --ink: #5a3a1e;
+    --orange: #ee7a1c;
+    --sun: #ffd84d;
+    --sun-deep: #f4b92b;
+    --lilac: #c9b6ee;
+    --lilac-deep: #8a6cd0;
+    --peach: #fde6c4;
+    --mint: #d8efc2;
+    --lavender: #e5dbf8;
+    --blush: #fbd7d0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive, sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse 260px 90px at 12% 6%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 320px 100px at 88% 3%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 280px 90px at 6% 52%, rgba(255,255,255,.9) 60%, transparent 62%),
+      radial-gradient(ellipse 300px 90px at 95% 58%, rgba(255,255,255,.9) 60%, transparent 62%),
+      linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 35%, #e4f4fb 62%, #f6f9e4 80%, #e7f3c8 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible { outline: 4px solid var(--lilac-deep); outline-offset: 3px; }
+  h1, h2, h3, .display { font-family: "Baloo 2", "Fredoka", sans-serif; }
+
+  .pic {
+    position: relative; display: block; width: 100%; height: 100%;
+    background: rgba(255,255,255,.45);
+    border: 2px dashed rgba(90,58,30,.35);
+    border-radius: inherit;
+  }
+  .pic::before {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6px; font-size: 14px; line-height: 1.1;
+    color: rgba(90,58,30,.65); z-index: 0;
+  }
+  .pic img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; z-index: 1;
+  }
+  .pic.cover img { object-fit: cover; }
+  .pic:has(img) { background: transparent; border-color: transparent; }
+  .pic:has(img)::before { content: none; }
+
+  .page { position: relative; max-width: 1180px; margin: 0 auto; padding: 20px 24px 0; }
+
+  .topbar { display: flex; align-items: center; gap: 18px; position: relative; z-index: 5; }
+  .topbar .logo-fly { width: 64px; height: 56px; flex: none; border-radius: 12px; }
+  .nav {
+    flex: 1; display: flex; justify-content: center; gap: 6px;
+    padding: 10px 14px; max-width: 640px; margin: 0 auto 0 0;
+    background: #fff1c9; border-radius: 999px;
+    box-shadow: 0 4px 0 rgba(224,188,100,.35), 0 8px 18px rgba(80,120,40,.12);
+  }
+  .nav a {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 19px;
+    padding: 4px 22px; border-radius: 999px; transition: background .15s, transform .15s;
+  }
+  .nav a:hover { background: rgba(255,216,77,.5); }
+  .nav a.active { background: var(--sun); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08); }
+  .search-btn {
+    flex: none; width: 52px; height: 52px; border: 0; border-radius: 50%;
+    background: #fff1c9; color: var(--ink); display: grid; place-items: center;
+    cursor: pointer; box-shadow: 0 4px 0 rgba(224,188,100,.35); transition: transform .15s;
+  }
+  .search-btn:hover { transform: scale(1.06); }
+  .search-btn svg { width: 26px; height: 26px; }
+
+  .section-panel {
+    position: relative; z-index: 4; margin-top: 22px;
+    padding: 0 32px 40px;
+    background: linear-gradient(180deg, #fffaf0, #fff6e0);
+    border-radius: 56px;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px #fdeab9, 0 18px 30px rgba(80,120,40,.15);
+  }
+  .pill-title {
+    display: inline-block; position: relative; top: -26px; margin-bottom: -10px;
+    padding: 6px 54px 8px; font-family: "Baloo 2", sans-serif; font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px); border-radius: 999px; line-height: 1.15;
+  }
+  .pill-title.green {
+    color: #3f7d1f; background: #b6e08a; border: 4px solid #9ad06a;
+    box-shadow: 0 5px 0 rgba(90,150,50,.35); -webkit-text-stroke: .5px #2f6414;
+  }
+  .pill-title.purple {
+    color: #5a3fb0; background: #d8c9f6; border: 4px dashed #b49be6;
+    box-shadow: 0 5px 0 rgba(120,90,200,.3);
+  }
+  .pill-title.orange {
+    color: #a34e0a; background: #ffe0b8; border: 4px solid #f7c47a;
+    box-shadow: 0 5px 0 rgba(200,120,20,.3);
+  }
+  .pill-title.blue {
+    color: #2f5f8a; background: #cbe6f7; border: 4px solid #9fd3f0;
+    box-shadow: 0 5px 0 rgba(50,120,170,.25);
+  }
+
+  .sub { font-size: 24px; margin-top: 0; position: relative; }
+  .sub .tiny-heart { width: 14px; height: 14px; fill: #f4b92b; margin-left: 4px; }
+
+  .stage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 26px; }
+  .stage-card {
+    position: relative; display: flex; flex-direction: column;
+    padding: 22px 22px 24px; border-radius: 36px;
+    border: 3px solid rgba(255,255,255,.9);
+    box-shadow: 0 6px 0 rgba(0,0,0,.06), 0 12px 18px rgba(80,60,20,.1);
+    scroll-margin-top: 30px;
+  }
+  .stage-card.c-egg { background: var(--peach); }
+  .stage-card.c-larva { background: var(--mint); }
+  .stage-card.c-pupa { background: var(--lavender); }
+  .stage-card.c-adult { background: var(--blush); }
+
+  .stage-card .stage-top { display: flex; align-items: center; gap: 16px; }
+  .stage-card .stage-photo {
+    width: 100px; height: 100px; flex: none; border-radius: 50%;
+    overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.1);
+  }
+  .stage-card h3 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 28px; line-height: 1.1; }
+  .stage-card h3 span { display: block; font-size: 18px; font-weight: 600; opacity: .75; }
+  .stage-card p { margin-top: 14px; font-size: 21px; line-height: 1.3; }
+  .stage-card .remember {
+    margin-top: 14px; display: inline-block; align-self: flex-start;
+    padding: 4px 18px; border-radius: 999px; background: #fff4d9;
+    font-family: "Baloo 2", sans-serif; font-weight: 700; font-size: 18px;
+    box-shadow: 0 3px 0 rgba(0,0,0,.08);
+  }
+
+  .info-box {
+    margin-top: 26px; padding: 22px 26px; border-radius: 30px;
+    background: #fff4d9; box-shadow: inset 0 0 0 3px #fdecc4;
+  }
+  .info-box h3 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 26px; margin-bottom: 8px; }
+  .info-box ul { margin-left: 24px; }
+  .info-box li { margin-bottom: 6px; font-size: 20px; }
+  .info-box p { font-size: 20px; line-height: 1.35; }
+  .order-reminder {
+    margin-top: 24px; text-align: center;
+    font-family: "Baloo 2", sans-serif; font-weight: 800;
+    font-size: clamp(20px, 3vw, 28px); padding: 16px 20px;
+    background: #b6e08a; border-radius: 24px; color: #2f6414;
+    box-shadow: 0 5px 0 rgba(90,150,50,.35);
+  }
+
+  /* ---------- Video ---------- */
+  .video-box {
+    margin-top: 26px; padding: 22px 26px; border-radius: 30px;
+    background: #cbe6f7; box-shadow: inset 0 0 0 3px #9fd3f0;
+  }
+  .video-box h3 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 26px; margin-bottom: 10px; color: #2f5f8a; }
+  .video-frame {
+    width: 100%; aspect-ratio: 16 / 9; border-radius: 22px; overflow: hidden;
+    background: #2f5f8a; border: 5px solid #fff;
+    box-shadow: 0 8px 16px rgba(30,80,120,.25);
+  }
+  .video-frame video { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+  .mini-links { display: flex; justify-content: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
+  .mini {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 20px;
+    padding: 4px 26px 6px; border-radius: 999px; background: #fff;
+    border: 3px solid #e4d7fa; box-shadow: 0 4px 0 rgba(138,108,208,.25);
+    transition: transform .15s, background .15s;
+  }
+  .mini:hover { transform: translateY(-2px); background: #f3ecff; }
+
+  .meadow { position: relative; margin-top: 10px; height: 200px; z-index: 1; }
+  .hill {
+    position: absolute; left: -5%; right: -5%; bottom: 0; height: 160px;
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--hill-deep) 0 99%, transparent 100%);
+  }
+  .hill.back {
+    height: 130px; bottom: 34px;
+    background: radial-gradient(ellipse 55% 100% at 30% 100%, #9bd465 0 99%, transparent 100%);
+  }
+  .meadow .motto {
+    position: absolute; left: 0; right: 0; bottom: 46px; text-align: center;
+    font-size: clamp(22px, 3.2vw, 32px); color: #fff;
+    text-shadow: 0 2px 0 rgba(30,80,20,.35); z-index: 3;
+  }
+  .motto .heart { width: 26px; height: 26px; fill: #ffd84d; vertical-align: middle; margin-left: 10px; }
+  .flowers-left, .flowers-right {
+    position: absolute; bottom: 6px; width: 180px; height: 130px; z-index: 2; border-radius: 16px;
+  }
+  .flowers-left { left: 10px; }
+  .flowers-right { right: 10px; }
+
+  @media (max-width: 900px) {
+    .stage-grid { grid-template-columns: 1fr; }
+    .nav a { padding: 4px 14px; font-size: 17px; }
+    .section-panel { padding: 0 20px 30px; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .page { padding: 14px 14px 0; }
+    .topbar { flex-wrap: wrap; justify-content: center; }
+    .topbar .logo-fly { display: none; }
+    .nav { flex-wrap: wrap; max-width: none; margin: 0; }
+    .section-panel { border-radius: 38px; padding: 0 16px 26px; }
+    .pill-title { padding: 4px 28px 6px; }
+    .stage-card { padding: 16px; }
+    .stage-card .stage-photo { width: 80px; height: 80px; }
+    .stage-card h3 { font-size: 24px; }
+    .flowers-left, .flowers-right { width: 100px; height: 70px; }
+    .info-box, .video-box { padding: 16px 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="topbar">
+    <a href="index.html" class="logo-fly" aria-label="Home">
+      <span class="pic" data-name="butterfly-left"><img src="images/butterfly-left.png" alt="" onerror="this.remove()"></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="lessons.html" class="active" aria-current="page">Lessons</a>
+      <a href="games.html">Games</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="about.html">About Us</a>
+    </nav>
+    <button class="search-btn" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="M15.5 15.5L21 21"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="section-panel" aria-labelledby="lessons-title">
+    <h1 class="pill-title green" id="lessons-title" style="position:relative;top:-26px;">Lessons: The Life Cycle</h1>
+    <p class="sub" style="text-align:center;margin-top:-6px;">Discover the four amazing stages of a butterfly's life!
+      <svg class="tiny-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+    </p>
+
+    <!-- ===== Learning Objectives ===== -->
+    <div class="info-box" style="margin-top:18px;background:#e5dbf8;box-shadow:inset 0 0 0 3px #d8c9f6;">
+      <h3>Learning Objectives</h3>
+      <p>At the end of the lesson, learners should be able to:</p>
+      <ul>
+        <li>Name the four stages in the life cycle of a butterfly.</li>
+        <li>Describe what happens in each stage.</li>
+        <li>Arrange the stages in the correct order.</li>
+        <li>Show care for butterflies and their natural environment.</li>
+      </ul>
+    </div>
+
+    <!-- ===== Video (from the videos folder) ===== -->
+    <div class="video-box" aria-labelledby="video-title">
+      <h3 id="video-title">Watch and Learn</h3>
+      <div class="video-frame">
+        <video controls preload="metadata" poster="images/stage-adult.jpg">
+          <source src="videos/butterfly-life-cycle.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+
+    <!-- ===== What Is a Life Cycle ===== -->
+    <div class="info-box" style="margin-top:26px;">
+      <h3>What Is a Life Cycle?</h3>
+      <p>A life cycle is the series of changes a living thing goes through as it grows and develops. A butterfly has four stages: egg, larva (caterpillar), pupa (chrysalis), and adult butterfly. This process is called <strong>complete metamorphosis</strong>.</p>
+    </div>
+
+    <div class="stage-grid">
+      <article class="stage-card c-egg" id="egg">
+        <div class="stage-top">
+          <div class="stage-photo">
+            <span class="pic cover" data-name="stage-egg"><img src="images/stage-egg.jpg" alt="Butterfly eggs on a leaf" onerror="this.remove()"></span>
+          </div>
+          <h3>1. Egg <span>The Beginning</span></h3>
+        </div>
+        <p>The life cycle begins when an adult female butterfly lays tiny eggs, usually on the leaves of plants. After some time, a tiny caterpillar comes out of the egg.</p>
+        <span class="remember">Remember: A butterfly starts its life as an egg.</span>
+      </article>
+
+      <article class="stage-card c-larva" id="larva">
+        <div class="stage-top">
+          <div class="stage-photo">
+            <span class="pic cover" data-name="stage-larva"><img src="images/stage-larva.jpg" alt="A striped caterpillar on a leaf" onerror="this.remove()"></span>
+          </div>
+          <h3>2. Larva <span>The Caterpillar</span></h3>
+        </div>
+        <p>After hatching, the young butterfly is called a larva or caterpillar. It eats leaves to grow and sheds its old skin several times.</p>
+        <span class="remember">Remember: The caterpillar's main job is to eat and grow.</span>
+      </article>
+
+      <article class="stage-card c-pupa" id="pupa">
+        <div class="stage-top">
+          <div class="stage-photo">
+            <span class="pic cover" data-name="stage-pupa"><img src="images/stage-pupa.jpg" alt="A green chrysalis hanging from a branch" onerror="this.remove()"></span>
+          </div>
+          <h3>3. Pupa <span>The Chrysalis</span></h3>
+        </div>
+        <p>When the caterpillar is ready, it forms a protective covering called a chrysalis. Inside, its body changes as it develops into a butterfly.</p>
+        <span class="remember">Remember: The pupa is the stage when the big change happens.</span>
+      </article>
+
+      <article class="stage-card c-adult" id="adult">
+        <div class="stage-top">
+          <div class="stage-photo">
+            <span class="pic cover" data-name="stage-adult"><img src="images/stage-adult.jpg" alt="An orange monarch butterfly on a pink flower" onerror="this.remove()"></span>
+          </div>
+          <h3>4. Adult Butterfly <span>The Final Stage</span></h3>
+        </div>
+        <p>A fully developed butterfly comes out of the chrysalis. Its wings expand and dry before it flies. Adult butterflies visit flowers for nectar and can reproduce, beginning the life cycle again.</p>
+        <span class="remember">Remember: The adult butterfly can lay eggs and start a new life cycle.</span>
+      </article>
+    </div>
+
+    <div class="info-box" style="margin-top:26px;">
+      <h3>Where Can We See Butterflies?</h3>
+      <p>Butterflies can often be seen in gardens, parks, and fields where flowering plants grow. They visit flowers to drink nectar. We can observe them without touching or disturbing them.</p>
+    </div>
+
+    <div class="info-box" style="margin-top:18px;background:#e5dbf8;box-shadow:inset 0 0 0 3px #d8c9f6;">
+      <h3>Why Is It Important to Learn About Butterflies?</h3>
+      <ul>
+        <li>Butterflies help pollinate many flowering plants.</li>
+        <li>They are part of the food chain and support nature.</li>
+        <li>Learning about them helps us understand how living things grow and change.</li>
+        <li>Protecting plants and natural habitats helps butterflies survive.</li>
+      </ul>
+    </div>
+
+    <!-- ===== Lesson Reminder (last part) ===== -->
+    <div class="order-reminder">EGG &rarr; LARVA (CATERPILLAR) &rarr; PUPA (CHRYSALIS) &rarr; ADULT BUTTERFLY</div>
+
+    <div class="mini-links">
+      <a class="mini" href="games.html">Play the Game</a>
+      <a class="mini" href="quiz.html">Take the Quiz</a>
+      <a class="mini" href="activities.html">Try Activities</a>
+    </div>
+  </section>
+</div>
+
+<footer class="meadow">
+  <div class="hill back" aria-hidden="true"></div>
+  <div class="hill" aria-hidden="true"></div>
+  <div class="flowers-left">
+    <span class="pic" data-name="flowers-left"><img src="images/flowers-left.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <div class="flowers-right">
+    <span class="pic" data-name="flowers-right"><img src="images/flowers-right.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <p class="motto">
+    Small changes make a big difference!
+    <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+  </p>
+</footer>
+
+</body>
+</html>

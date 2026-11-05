@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us · Butterfly Life Cycle Adventure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #bfe3f7;
+    --sky-deep: #9fd3f0;
+    --leaf: #7cbf4a;
+    --leaf-dark: #3f8a2c;
+    --hill: #5aa63a;
+    --hill-deep: #3d8a2e;
+    --cream: #fff8e7;
+    --cream-edge: #fdecc4;
+    --wood: #d9a56a;
+    --wood-dark: #a8703a;
+    --ink: #5a3a1e;
+    --orange: #ee7a1c;
+    --sun: #ffd84d;
+    --sun-deep: #f4b92b;
+    --lilac: #c9b6ee;
+    --lilac-deep: #8a6cd0;
+    --peach: #fde6c4;
+    --mint: #d8efc2;
+    --lavender: #e5dbf8;
+    --blush: #fbd7d0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive, sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse 260px 90px at 12% 6%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 320px 100px at 88% 3%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 280px 90px at 6% 52%, rgba(255,255,255,.9) 60%, transparent 62%),
+      radial-gradient(ellipse 300px 90px at 95% 58%, rgba(255,255,255,.9) 60%, transparent 62%),
+      linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 35%, #e4f4fb 62%, #f6f9e4 80%, #e7f3c8 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible { outline: 4px solid var(--lilac-deep); outline-offset: 3px; }
+  h1, h2, h3, .display { font-family: "Baloo 2", "Fredoka", sans-serif; }
+
+  .pic {
+    position: relative; display: block; width: 100%; height: 100%;
+    background: rgba(255,255,255,.45);
+    border: 2px dashed rgba(90,58,30,.35);
+    border-radius: inherit;
+  }
+  .pic::before {
+    content: attr(data-name); position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 6px; font-size: 14px; line-height: 1.1;
+    color: rgba(90,58,30,.65); z-index: 0;
+  }
+  .pic img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: contain; z-index: 1;
+  }
+  .pic.cover img { object-fit: cover; }
+  .pic:has(img) { background: transparent; border-color: transparent; }
+  .pic:has(img)::before { content: none; }
+
+  .page { position: relative; max-width: 1180px; margin: 0 auto; padding: 20px 24px 0; }
+
+  .topbar { display: flex; align-items: center; gap: 18px; position: relative; z-index: 5; }
+  .topbar .logo-fly { width: 64px; height: 56px; flex: none; border-radius: 12px; }
+  .nav {
+    flex: 1; display: flex; justify-content: center; gap: 6px;
+    padding: 10px 14px; max-width: 640px; margin: 0 auto 0 0;
+    background: #fff1c9; border-radius: 999px;
+    box-shadow: 0 4px 0 rgba(224,188,100,.35), 0 8px 18px rgba(80,120,40,.12);
+  }
+  .nav a {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 19px;
+    padding: 4px 22px; border-radius: 999px; transition: background .15s, transform .15s;
+  }
+  .nav a:hover { background: rgba(255,216,77,.5); }
+  .nav a.active { background: var(--sun); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08); }
+  .search-btn {
+    flex: none; width: 52px; height: 52px; border: 0; border-radius: 50%;
+    background: #fff1c9; color: var(--ink); display: grid; place-items: center;
+    cursor: pointer; box-shadow: 0 4px 0 rgba(224,188,100,.35); transition: transform .15s;
+  }
+  .search-btn:hover { transform: scale(1.06); }
+  .search-btn svg { width: 26px; height: 26px; }
+
+  .section-panel {
+    position: relative; z-index: 4; margin-top: 22px;
+    padding: 0 32px 40px;
+    background: linear-gradient(180deg, #fffaf0, #fff6e0);
+    border-radius: 56px;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px #fdeab9, 0 18px 30px rgba(80,120,40,.15);
+  }
+  .pill-title {
+    display: inline-block; position: relative; top: -26px; margin-bottom: -10px;
+    padding: 6px 54px 8px; font-family: "Baloo 2", sans-serif; font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px); border-radius: 999px; line-height: 1.15;
+  }
+  .pill-title.orange {
+    color: #a34e0a; background: #ffe0b8; border: 4px solid #f7c47a;
+    box-shadow: 0 5px 0 rgba(200,120,20,.3);
+  }
+  .sub { font-size: 24px; margin-top: 0; position: relative; }
+  .sub .tiny-heart { width: 14px; height: 14px; fill: #f4b92b; margin-left: 4px; }
+
+  .about-content {
+    margin-top: 24px; padding: 26px 30px; border-radius: 34px;
+    background: #fff; border: 3px solid #fdecc4;
+    box-shadow: 0 4px 0 rgba(224,188,100,.25);
+  }
+  .about-content h2 {
+    font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 28px;
+    margin-bottom: 8px; color: #3f7d1f;
+  }
+  .about-content p { font-size: 21px; line-height: 1.45; margin-bottom: 14px; }
+  .about-content .tagline {
+    text-align: center; margin-top: 20px; padding: 18px 20px;
+    background: #d8c9f6; border-radius: 24px;
+    font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 28px;
+    color: #4a2f90; box-shadow: inset 0 0 0 3px #c9b6ee;
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 24px;
+  }
+  .about-card {
+    padding: 22px 24px; border-radius: 28px;
+    background: #fff4d9; box-shadow: inset 0 0 0 3px #fdecc4;
+  }
+  .about-card h3 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 24px; margin-bottom: 6px; }
+  .about-card ul { margin-left: 22px; }
+  .about-card li { margin-bottom: 4px; font-size: 20px; }
+
+  .mini-links { display: flex; justify-content: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
+  .mini {
+    font-family: "Baloo 2", sans-serif; font-weight: 600; font-size: 20px;
+    padding: 4px 26px 6px; border-radius: 999px; background: #fff;
+    border: 3px solid #e4d7fa; box-shadow: 0 4px 0 rgba(138,108,208,.25);
+    transition: transform .15s, background .15s;
+  }
+  .mini:hover { transform: translateY(-2px); background: #f3ecff; }
+
+  .meadow { position: relative; margin-top: 10px; height: 200px; z-index: 1; }
+  .hill {
+    position: absolute; left: -5%; right: -5%; bottom: 0; height: 160px;
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--hill-deep) 0 99%, transparent 100%);
+  }
+  .hill.back {
+    height: 130px; bottom: 34px;
+    background: radial-gradient(ellipse 55% 100% at 30% 100%, #9bd465 0 99%, transparent 100%);
+  }
+  .meadow .motto {
+    position: absolute; left: 0; right: 0; bottom: 46px; text-align: center;
+    font-size: clamp(22px, 3.2vw, 32px); color: #fff;
+    text-shadow: 0 2px 0 rgba(30,80,20,.35); z-index: 3;
+  }
+  .motto .heart { width: 26px; height: 26px; fill: #ffd84d; vertical-align: middle; margin-left: 10px; }
+  .flowers-left, .flowers-right {
+    position: absolute; bottom: 6px; width: 180px; height: 130px; z-index: 2; border-radius: 16px;
+  }
+  .flowers-left { left: 10px; }
+  .flowers-right { right: 10px; }
+
+  @media (max-width: 900px) {
+    .nav a { padding: 4px 14px; font-size: 17px; }
+    .section-panel { padding: 0 20px 30px; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .page { padding: 14px 14px 0; }
+    .topbar { flex-wrap: wrap; justify-content: center; }
+    .topbar .logo-fly { display: none; }
+    .nav { flex-wrap: wrap; max-width: none; margin: 0; }
+    .section-panel { border-radius: 38px; padding: 0 16px 26px; }
+    .pill-title { padding: 4px 28px 6px; }
+    .about-content { padding: 18px; }
+    .about-content .tagline { font-size: 22px; }
+    .flowers-left, .flowers-right { width: 100px; height: 70px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="topbar">
+    <a href="index.html" class="logo-fly" aria-label="Home">
+      <span class="pic" data-name="butterfly-left"><img src="images/butterfly-left.png" alt="" onerror="this.remove()"></span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="lessons.html">Lessons</a>
+      <a href="games.html">Games</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="about.html" class="active" aria-current="page">About Us</a>
+    </nav>
+    <button class="search-btn" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="M15.5 15.5L21 21"/>
+      </svg>
+    </button>
+  </header>
+
+  <section class="section-panel" aria-labelledby="about-title">
+    <h1 class="pill-title orange" id="about-title" style="position:relative;top:-26px;">About Us</h1>
+    <p class="sub" style="text-align:center;margin-top:-6px;">The Butterfly Life Cycle Adventure
+      <svg class="tiny-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+    </p>
+
+    <div class="about-content">
+      <h2>Welcome, Little Nature Explorers!</h2>
+      <p>Discover how a tiny egg transforms into a beautiful butterfly. Explore the lessons, play fun games, answer quizzes, and complete exciting activities. Let's learn about nature together!</p>
+      <p>This website is designed to help young learners understand the four stages of a butterfly's life cycle: egg, larva (caterpillar), pupa (chrysalis), and adult butterfly. It is a cheerful, calm, and welcoming place — like exploring a garden full of flowers and butterflies.</p>
+      <div class="tagline">"Small Beginnings, Beautiful Wings!"</div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <h3>What You Will Find</h3>
+        <ul>
+          <li><strong>Lessons</strong> — Learn about each of the four stages.</li>
+          <li><strong>Games</strong> — Become a Butterfly Detective with fun challenges.</li>
+          <li><strong>Quizzes</strong> — Test your knowledge with ten questions.</li>
+          <li><strong>Activities</strong> — Draw, observe, and reflect in your Discovery Journal.</li>
+        </ul>
+      </div>
+      <div class="about-card" style="background:#e5dbf8;box-shadow:inset 0 0 0 3px #d8c9f6;">
+        <h3>Our Goals</h3>
+        <ul>
+          <li>Help learners name and describe the four life cycle stages.</li>
+          <li>Encourage curiosity and careful observation of nature.</li>
+          <li>Show why butterflies are important to our environment.</li>
+          <li>Inspire everyone to protect butterflies and their habitats.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mini-links">
+      <a class="mini" href="lessons.html">Start Learning</a>
+      <a class="mini" href="games.html">Play the Game</a>
+      <a class="mini" href="quiz.html">Take the Quiz</a>
+      <a class="mini" href="activities.html">Try Activities</a>
+    </div>
+  </section>
+</div>
+
+<footer class="meadow">
+  <div class="hill back" aria-hidden="true"></div>
+  <div class="hill" aria-hidden="true"></div>
+  <div class="flowers-left">
+    <span class="pic" data-name="flowers-left"><img src="images/flowers-left.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <div class="flowers-right">
+    <span class="pic" data-name="flowers-right"><img src="images/flowers-right.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <p class="motto">
+    Small changes make a big difference!
+    <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z"/></svg>
+  </p>
+</footer>
+
+</body>
+</html>

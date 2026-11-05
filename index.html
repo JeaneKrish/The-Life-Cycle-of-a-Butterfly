@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Life Cycle of a Butterfly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<!--
+  IMAGE FOLDER GUIDE
+  Put your pictures inside a folder named "images" next to this file.
+  Replace each file below with your own artwork (same file names, or edit the src in the HTML).
+
+  images/butterfly-left.png      small butterfly beside the nav bar (top left)
+  images/butterfly-sign.png      butterfly sitting on the wooden sign (top left of title)
+  images/mascot-flower.png       smiling butterfly on the white flower (top right)
+  images/stage-egg.png           1. Egg picture
+  images/stage-larva.png         2. Larva picture
+  images/stage-pupa.png          3. Pupa picture
+  images/stage-adult.png         4. Adult butterfly picture
+  images/girl-magnifier.png      girl with the magnifying glass
+  images/butterfly-small.png     small butterfly near the game button
+  images/flowers-left.png        flower cluster, lower left (optional)
+  images/flowers-right.png       flower cluster, lower right (optional)
+
+  Until a file exists, a soft dashed placeholder box is shown instead.
+-->
+
+<style>
+  :root {
+    --sky: #bfe3f7;
+    --sky-deep: #9fd3f0;
+    --leaf: #7cbf4a;
+    --leaf-dark: #3f8a2c;
+    --hill: #5aa63a;
+    --hill-deep: #3d8a2e;
+    --cream: #fff8e7;
+    --cream-edge: #fdecc4;
+    --wood: #d9a56a;
+    --wood-dark: #a8703a;
+    --ink: #5a3a1e;
+    --orange: #ee7a1c;
+    --sun: #ffd84d;
+    --sun-deep: #f4b92b;
+    --lilac: #c9b6ee;
+    --lilac-deep: #8a6cd0;
+    --peach: #fde6c4;
+    --mint: #d8efc2;
+    --lavender: #e5dbf8;
+    --blush: #fbd7d0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Patrick Hand", "Comic Sans MS", cursive, sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse 260px 90px at 12% 6%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 320px 100px at 88% 3%, #fff 60%, transparent 62%),
+      radial-gradient(ellipse 280px 90px at 6% 52%, rgba(255,255,255,.9) 60%, transparent 62%),
+      radial-gradient(ellipse 300px 90px at 95% 58%, rgba(255,255,255,.9) 60%, transparent 62%),
+      linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 35%, #e4f4fb 62%, #f6f9e4 80%, #e7f3c8 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible {
+    outline: 4px solid var(--lilac-deep);
+    outline-offset: 3px;
+  }
+
+  h1, h2, h3, .display { font-family: "Baloo 2", "Fredoka", sans-serif; }
+
+  /* ---------- Image placeholder system ----------
+     The dashed box is a BACKGROUND of .pic, so a real <img>
+     (absolutely positioned on top) covers it completely.
+     When the image is missing, the dashed background shows through.
+  ------------------------------------------------ */
+  .pic {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .45);
+    border: 2px dashed rgba(90, 58, 30, .35);
+    border-radius: inherit;
+  }
+  .pic::before {
+    content: attr(data-name);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+    font-size: 14px;
+    line-height: 1.1;
+    color: rgba(90, 58, 30, .65);
+    z-index: 0;
+  }
+  .pic img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 1;
+  }
+  .pic.cover img { object-fit: cover; }
+
+  /* Safety net: if a real image is inside, hide the dashed box + label
+     (so no border peeks out even for non-covering images). */
+  .pic:has(img) {
+    background: transparent;
+    border-color: transparent;
+  }
+  .pic:has(img)::before { content: none; }
+
+  /* ---------- Page frame ---------- */
+  .page {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 20px 24px 0;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    z-index: 5;
+  }
+  .topbar .logo-fly {
+    width: 64px;
+    height: 56px;
+    flex: none;
+    border-radius: 12px;
+  }
+  .nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    max-width: 640px;
+    margin: 0 auto 0 0;
+    background: #fff1c9;
+    border-radius: 999px;
+    box-shadow: 0 4px 0 rgba(224, 188, 100, .35), 0 8px 18px rgba(80, 120, 40, .12);
+  }
+  .nav a {
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    padding: 4px 22px;
+    border-radius: 999px;
+    transition: background .15s, transform .15s;
+  }
+  .nav a:hover { background: rgba(255, 216, 77, .5); }
+  .nav a.active {
+    background: var(--sun);
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.08);
+  }
+  .search-btn {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff1c9;
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(224, 188, 100, .35);
+    transition: transform .15s;
+  }
+  .search-btn:hover { transform: scale(1.06); }
+  .search-btn svg { width: 26px; height: 26px; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    align-items: center;
+    gap: 10px;
+    min-height: 420px;
+    padding-top: 10px;
+  }
+  .hero-left { position: relative; padding: 40px 0 30px 40px; }
+
+  .hero-fly {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    width: 150px;
+    height: 130px;
+    z-index: 3;
+    border-radius: 16px;
+  }
+  .doodle-trail {
+    position: absolute;
+    top: 6px;
+    left: 130px;
+    width: 300px;
+    height: 70px;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .sign-wrap { position: relative; max-width: 560px; margin-left: 40px; }
+  .sign-peg {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    width: 22px;
+    height: 36px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #8b5a2b, #b57b42);
+    border-radius: 10px 10px 4px 4px;
+    z-index: 0;
+  }
+  .sign {
+    position: relative;
+    z-index: 1;
+    padding: 34px 40px 52px;
+    text-align: center;
+    background:
+      repeating-linear-gradient(176deg, transparent 0 22px, rgba(140, 90, 40, .12) 22px 24px),
+      linear-gradient(180deg, #e8b87c, #d39a5c);
+    border: 6px solid #fff2d6;
+    border-radius: 36px 40px 34px 44px / 40px 34px 44px 36px;
+    box-shadow: 0 0 0 4px var(--wood-dark), 0 14px 0 -2px rgba(120, 70, 20, .25), 0 20px 30px rgba(80, 50, 10, .2);
+    transform: rotate(-2deg);
+  }
+  .sign h1 {
+    font-size: clamp(34px, 5.2vw, 62px);
+    font-weight: 800;
+    line-height: .95;
+    color: #5a3515;
+    letter-spacing: .5px;
+    -webkit-text-stroke: 1px #3e230b;
+    text-shadow: 0 3px 0 rgba(255, 235, 200, .55);
+  }
+  .sign h1 .line2 { display: block; }
+  .sign h1 .big {
+    color: var(--orange);
+    font-size: 1.35em;
+    -webkit-text-stroke: 1.5px #7a3a08;
+    text-shadow: 0 3px 0 rgba(255, 235, 200, .6);
+  }
+  .ribbon {
+    position: relative;
+    z-index: 2;
+    margin: -34px auto 0 70px;
+    width: max-content;
+    max-width: 90%;
+    padding: 10px 40px;
+    font-size: 26px;
+    text-align: center;
+    background: #fff4d9;
+    border-radius: 14px 14px 40px 40px / 14px 14px 26px 26px;
+    box-shadow: 0 4px 0 rgba(224, 188, 100, .55), 0 10px 16px rgba(80, 50, 10, .15);
+    transform: rotate(-1.5deg);
+  }
+  .ribbon .heart { width: 18px; height: 18px; vertical-align: -2px; fill: #f08a5d; margin: 0 6px; }
+
+  .hero-right { position: relative; height: 100%; min-height: 360px; }
+  .mascot {
+    position: absolute;
+    right: 0;
+    bottom: -10px;
+    width: min(100%, 420px);
+    aspect-ratio: 1 / 1.05;
+    border-radius: 24px;
+    z-index: 3;
+  }
+  .sparkle-sun {
+    position: absolute;
+    top: 6px;
+    right: 28%;
+    width: 70px;
+    height: 56px;
+    z-index: 2;
+  }
+  .heart-doodle {
+    position: absolute;
+    top: 0;
+    left: 6%;
+    width: 120px;
+    height: 70px;
+    z-index: 1;
+  }
+
+  .bush-left, .bush-right {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .bush-left {
+    left: -40px; top: 120px;
+    width: 220px; height: 330px;
+    background:
+      radial-gradient(circle at 40% 30%, #6ab544 0 38%, transparent 39%),
+      radial-gradient(circle at 20% 65%, #7cc750 0 36%, transparent 37%),
+      radial-gradient(circle at 55% 85%, #5aa63a 0 34%, transparent 35%);
+  }
+  .bush-right {
+    right: -50px; top: 90px;
+    width: 260px; height: 380px;
+    background:
+      radial-gradient(circle at 60% 25%, #6ab544 0 36%, transparent 37%),
+      radial-gradient(circle at 75% 60%, #7cc750 0 38%, transparent 39%),
+      radial-gradient(circle at 45% 90%, #5aa63a 0 34%, transparent 35%);
+  }
+
+  /* ---------- Explore panel ---------- */
+  .explore {
+    position: relative;
+    z-index: 4;
+    margin-top: 18px;
+    padding: 0 28px 34px;
+    background: linear-gradient(180deg, #fffaf0, #fff6e0);
+    border-radius: 56px;
+    box-shadow:
+      0 0 0 6px #fff,
+      0 0 0 9px #fdeab9,
+      0 18px 30px rgba(80, 120, 40, .15);
+    text-align: center;
+  }
+  .pill-title {
+    display: inline-block;
+    position: relative;
+    top: -26px;
+    margin-bottom: -10px;
+    padding: 6px 54px 8px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    border-radius: 999px;
+    line-height: 1.15;
+  }
+  .pill-title.green {
+    color: #3f7d1f;
+    background: #b6e08a;
+    border: 4px solid #9ad06a;
+    box-shadow: 0 5px 0 rgba(90, 150, 50, .35);
+    -webkit-text-stroke: .5px #2f6414;
+  }
+  .pill-title.purple {
+    color: #5a3fb0;
+    background: #d8c9f6;
+    border: 4px dashed #b49be6;
+    box-shadow: 0 5px 0 rgba(120, 90, 200, .3);
+  }
+  .sub {
+    font-size: 24px;
+    margin-top: 0;
+    position: relative;
+  }
+  .sub .tiny-heart { width: 14px; height: 14px; fill: #f4b92b; margin-left: 4px; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 22px;
+  }
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 14px 20px;
+    border-radius: 34px;
+    text-align: center;
+    border: 3px solid rgba(255, 255, 255, .9);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, .06), 0 12px 18px rgba(80, 60, 20, .1);
+    transition: transform .18s ease, box-shadow .18s ease;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 0 rgba(0, 0, 0, .07), 0 18px 24px rgba(80, 60, 20, .16);
+  }
+  .card:active { transform: translateY(0); }
+  .card.c-egg   { background: var(--peach); }
+  .card.c-larva { background: var(--mint); }
+  .card.c-pupa  { background: var(--lavender); }
+  .card.c-adult { background: var(--blush); }
+
+  .card .photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 38% 42% 36% 44% / 40% 36% 44% 38%;
+    overflow: hidden;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,.1);
+  }
+  .card .label {
+    margin-top: -22px;
+    position: relative;
+    z-index: 2;
+    padding: 4px 26px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    background: #fff4d9;
+    border-radius: 999px;
+    box-shadow: 0 3px 0 rgba(0,0,0,.08);
+    white-space: nowrap;
+  }
+  .card p {
+    margin-top: 10px;
+    font-size: 21px;
+    line-height: 1.15;
+    max-width: 190px;
+  }
+
+  /* ---------- Play & Test ---------- */
+  .play {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+    margin-top: 10px;
+    min-height: 340px;
+  }
+  .girl {
+    width: min(100%, 360px);
+    aspect-ratio: 1 / 1.05;
+    margin-left: -10px;
+    border-radius: 24px;
+  }
+  .play-body { text-align: center; padding-bottom: 20px; }
+  .play-body .pill-title { top: 0; margin-bottom: 8px; }
+  .play-body .sub { font-size: 24px; }
+  .big-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 22px;
+    padding: 14px 40px 16px 34px;
+    min-width: 400px;
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #5a3a1e;
+    background: linear-gradient(180deg, #ffe46b, #fdcf3a);
+    border: 4px solid #fff3b0;
+    border-radius: 999px;
+    box-shadow: 0 7px 0 #e4a91f, 0 14px 22px rgba(120, 80, 0, .25);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .big-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #e4a91f, 0 18px 26px rgba(120, 80, 0, .28); }
+  .big-btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #e4a91f; }
+  .big-btn .pad { width: 52px; height: 40px; flex: none; }
+  .big-btn .chev { width: 26px; height: 26px; flex: none; }
+
+  .mini-links {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .mini {
+    font-family: "Baloo 2", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    padding: 4px 26px 6px;
+    border-radius: 999px;
+    background: #fff;
+    border: 3px solid #e4d7fa;
+    box-shadow: 0 4px 0 rgba(138, 108, 208, .25);
+    transition: transform .15s, background .15s;
+  }
+  .mini:hover { transform: translateY(-2px); background: #f3ecff; }
+
+  .play-fly {
+    position: absolute;
+    right: 2%;
+    top: 4px;
+    width: 90px;
+    height: 80px;
+    border-radius: 14px;
+  }
+  .doodle-loop {
+    position: absolute;
+    right: 6%;
+    top: 90px;
+    width: 120px;
+    height: 120px;
+  }
+
+  /* ---------- Footer meadow ---------- */
+  .meadow {
+    position: relative;
+    margin-top: -20px;
+    height: 230px;
+    z-index: 1;
+  }
+  .hill {
+    position: absolute;
+    left: -5%;
+    right: -5%;
+    bottom: 0;
+    height: 190px;
+    background: radial-gradient(ellipse 60% 100% at 50% 100%, var(--hill-deep) 0 99%, transparent 100%);
+  }
+  .hill.back {
+    height: 150px;
+    bottom: 40px;
+    background: radial-gradient(ellipse 55% 100% at 30% 100%, #9bd465 0 99%, transparent 100%);
+  }
+  .meadow .motto {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 56px;
+    text-align: center;
+    font-size: clamp(24px, 3.6vw, 38px);
+    color: #fff;
+    text-shadow: 0 2px 0 rgba(30, 80, 20, .35);
+    z-index: 3;
+  }
+  .motto .motto-line {
+    display: block;
+    width: 62%;
+    max-width: 520px;
+    height: 12px;
+    margin: 0 auto;
+  }
+  .motto .heart { width: 28px; height: 28px; fill: #ffd84d; vertical-align: middle; margin-left: 10px; }
+  .flowers-left, .flowers-right {
+    position: absolute;
+    bottom: 10px;
+    width: 220px;
+    height: 150px;
+    z-index: 2;
+    border-radius: 16px;
+  }
+  .flowers-left { left: 10px; }
+  .flowers-right { right: 10px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding-left: 10px; }
+    .sign-wrap { margin-left: 10px; margin-right: auto; }
+    .hero-right { min-height: 320px; }
+    .mascot { right: 50%; transform: translateX(50%); width: min(80%, 340px); }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .play { grid-template-columns: 1fr; }
+    .girl { margin: 0 auto; }
+    .big-btn { min-width: 0; font-size: 30px; }
+    .play-fly, .doodle-loop { display: none; }
+    .nav a { padding: 4px 14px; font-size: 17px; }
+  }
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .page { padding: 14px 14px 0; }
+    .topbar { flex-wrap: wrap; justify-content: center; }
+    .topbar .logo-fly { display: none; }
+    .nav { flex-wrap: wrap; max-width: none; margin: 0; }
+    .hero-fly { width: 90px; height: 80px; }
+    .doodle-trail, .heart-doodle { display: none; }
+    .sign { padding: 26px 20px 44px; }
+    .ribbon { margin-left: 20px; padding: 8px 22px; font-size: 20px; }
+    .explore { border-radius: 38px; padding: 0 14px 26px; }
+    .pill-title { padding: 4px 28px 6px; }
+    .cards { gap: 12px; }
+    .card { padding: 12px 8px 16px; border-radius: 26px; }
+    .card .label { font-size: 19px; padding: 2px 16px; }
+    .card p { font-size: 17px; }
+    .big-btn { font-size: 26px; padding: 12px 24px; gap: 10px; }
+    .big-btn .pad { width: 40px; }
+    .flowers-left, .flowers-right { width: 110px; height: 80px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ===== Top navigation ===== -->
+  <header class="topbar">
+    <a href="index.html" class="logo-fly" aria-label="Home">
+      <span class="pic" data-name="butterfly-left"><img src="images/butterfly-left.png" alt="" onerror="this.remove()"></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="index.html" class="active" aria-current="page">Home</a>
+      <a href="lessons.html">Lessons</a>
+      <a href="games.html">Games</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="about.html">About Us</a>
+    </nav>
+
+    <button class="search-btn" type="button" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="M15.5 15.5L21 21"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="bush-left" aria-hidden="true"></div>
+    <div class="bush-right" aria-hidden="true"></div>
+
+    <div class="hero-left">
+      <div class="hero-fly">
+        <span class="pic" data-name="butterfly-sign"><img src="images/butterfly-sign.png" alt="" onerror="this.remove()"></span>
+      </div>
+
+      <svg class="doodle-trail" viewBox="0 0 300 70" fill="none" stroke="#6b4a2a" stroke-width="2" stroke-dasharray="6 7" stroke-linecap="round" aria-hidden="true">
+        <path d="M0 62 C60 10, 150 0, 230 22 C262 30, 272 14, 286 8"/>
+      </svg>
+
+      <div class="sign-wrap">
+        <div class="sign-peg" aria-hidden="true"></div>
+        <div class="sign">
+          <h1>The Life Cycle
+            <span class="line2">of a <span class="big">Butterfly</span></span>
+          </h1>
+        </div>
+        <div class="ribbon">
+          <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.800-8 11-8 11z"/></svg>Learn &middot; Discover &middot; Grow!<svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.800-8 11-8 11z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <svg class="heart-doodle" viewBox="0 0 120 70" fill="none" stroke="#6b4a2a" stroke-width="2" stroke-dasharray="6 7" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 60 C30 20, 70 10, 96 28"/>
+        <path d="M96 28 C86 12, 100 4, 106 14 C112 4, 126 14, 112 28 Z" stroke-dasharray="none"/>
+      </svg>
+      <svg class="sparkle-sun" viewBox="0 0 70 56" fill="none" stroke="#ffd23a" stroke-width="6" stroke-linecap="round" aria-hidden="true">
+        <path d="M35 4 V20"/><path d="M12 14 L22 26"/><path d="M58 14 L48 26"/>
+      </svg>
+      <div class="mascot">
+        <span class="pic" data-name="mascot-flower"><img src="images/mascot-flower.png" alt="A smiling butterfly sitting on a white flower" onerror="this.remove()"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Explore & Learn ===== -->
+  <section class="explore" aria-labelledby="explore-title">
+    <h2 class="pill-title green" id="explore-title">Explore &amp; Learn</h2>
+    <p class="sub">Discover the amazing journey of a butterfly!
+      <svg class="tiny-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.800-8 11-8 11z"/></svg>
+    </p>
+
+    <div class="cards">
+      <a class="card c-egg" href="lessons.html#egg">
+        <div class="photo"><span class="pic cover" data-name="stage-egg"><img src="images/stage-egg.jpg" alt="Butterfly eggs on a leaf" onerror="this.remove()"></span></div>
+        <div class="label">1. Egg</div>
+        <p>A tiny egg starts the journey!</p>
+      </a>
+
+      <a class="card c-larva" href="lessons.html#larva">
+        <div class="photo"><span class="pic cover" data-name="stage-larva"><img src="images/stage-larva.jpg" alt="A striped caterpillar on a leaf" onerror="this.remove()"></span></div>
+        <div class="label">2. Larva</div>
+        <p>A hungry caterpillar grows bigger!</p>
+      </a>
+
+      <a class="card c-pupa" href="lessons.html#pupa">
+        <div class="photo"><span class="pic cover" data-name="stage-pupa"><img src="images/stage-pupa.jpg" alt="A green chrysalis hanging from a branch" onerror="this.remove()"></span></div>
+        <div class="label">3. Pupa</div>
+        <p>A chrysalis brings big changes!</p>
+      </a>
+
+      <a class="card c-adult" href="lessons.html#adult">
+        <div class="photo"><span class="pic cover" data-name="stage-adult"><img src="images/stage-adult.jpg" alt="An orange monarch butterfly on a pink flower" onerror="this.remove()"></span></div>
+        <div class="label">4. Adult Butterfly</div>
+        <p>A beautiful butterfly flies free!</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== Play & Test ===== -->
+  <section class="play" aria-labelledby="play-title">
+    <div class="girl">
+      <span class="pic" data-name="girl-magnifier"><img src="images/girl-magnifier.png" alt="A girl looking through a magnifying glass" onerror="this.remove()"></span>
+    </div>
+
+    <div class="play-body">
+      <h2 class="pill-title purple" id="play-title">Play &amp; Test</h2>
+      <p class="sub">Show what you've learned!
+        <svg class="tiny-heart" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;fill:#f4b92b"><path d="M12 2l2.9 6.600 7.100.7-5.400 4.700 1.600 7-6.200-3.700-6.200 3.700 1.600-7L2 9.300l7.100-.7z"/></svg>
+      </p>
+
+      <a class="big-btn" href="games.html">
+        <svg class="pad" viewBox="0 0 52 40" aria-hidden="true">
+          <path fill="#5a3a1e" d="M14 4h24c8 0 12 6 13 16 .8 8-2 16-8 16-4 0-6-3-9-8H18c-3 5-5 8-9 8-6 0-9-8-8-16C2 10 6 4 14 4z"/>
+          <path stroke="#ffe46b" stroke-width="4" stroke-linecap="round" d="M14 14v10M9 19h10"/>
+          <circle cx="36" cy="15" r="2.6" fill="#ffe46b"/><circle cx="42" cy="21" r="2.6" fill="#ffe46b"/>
+          <circle cx="30" cy="21" r="2.6" fill="#ffe46b"/><circle cx="36" cy="27" r="2.6" fill="#ffe46b"/>
+        </svg>
+        <span>Play the Game</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="#5a3a1e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+      </a>
+
+      <div class="mini-links">
+        <a class="mini" href="quiz.html">Take the Quiz</a>
+        <a class="mini" href="activities.html">Try Activities</a>
+      </div>
+    </div>
+
+    <div class="play-fly">
+      <span class="pic" data-name="butterfly-small"><img src="images/butterfly-small.png" alt="" onerror="this.remove()"></span>
+    </div>
+    <svg class="doodle-loop" viewBox="0 0 120 120" fill="none" stroke="#6b4a2a" stroke-width="2" stroke-dasharray="6 7" stroke-linecap="round" aria-hidden="true">
+      <path d="M20 10 C70 0, 100 40, 70 70 C45 94, 14 60, 44 44 C66 34, 88 80, 60 112"/>
+    </svg>
+  </section>
+
+</div>
+
+<!-- ===== Footer meadow ===== -->
+<footer class="meadow">
+  <div class="hill back" aria-hidden="true"></div>
+  <div class="hill" aria-hidden="true"></div>
+
+  <div class="flowers-left">
+    <span class="pic" data-name="flowers-left"><img src="images/flowers-left.png" alt="" onerror="this.remove()"></span>
+  </div>
+  <div class="flowers-right">
+    <span class="pic" data-name="flowers-right"><img src="images/flowers-right.png" alt="" onerror="this.remove()"></span>
+  </div>
+
+  <p class="motto">
+    Small changes make a big difference!
+    <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.800-8 11-8 11z"/></svg>
+    <svg class="motto-line" viewBox="0 0 520 12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8 C140 0, 380 0, 516 8"/></svg>
+  </p>
+</footer>
+
+</body>
+</html>
